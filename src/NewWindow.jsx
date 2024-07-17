@@ -16,10 +16,12 @@ function NewWindow({ children, onClose }) {
       return;
     }
 
-    // Create a container div for the React component
-    const containerDiv = newWindowRef.current.document.createElement('div');
-    newWindowRef.current.document.body.appendChild(containerDiv);
-    setContainer(containerDiv);
+    // Create a container div for the React component if not already created
+    if (!container) {
+      const containerDiv = newWindowRef.current.document.createElement('div');
+      newWindowRef.current.document.body.appendChild(containerDiv);
+      setContainer(containerDiv);
+    }
 
     // Add event listener to clean up on close
     newWindowRef.current.addEventListener('beforeunload', onClose);
@@ -29,7 +31,7 @@ function NewWindow({ children, onClose }) {
       newWindowRef.current.removeEventListener('beforeunload', onClose);
       // Do not close the window here to keep it open for future updates
     };
-  }, [onClose]);
+  }, [container, onClose]);
 
   // Render the children into the new window's container
   return container ? ReactDOM.createPortal(children, container) : null;
