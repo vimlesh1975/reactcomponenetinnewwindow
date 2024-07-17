@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import NewWindow from './NewWindow';
 
-function App() {
+const SecondComponent = React.memo(({ dd }) => {
+  return <div>{dd} This is the second component displayed in a new window</div>;
+});
+
+const App = () => {
+  const [showNewWindow, setShowNewWindow] = useState(false);
+  const [aa, setAa] = useState(10);
+
+  const handleOpenNewWindow = () => {
+    setShowNewWindow(true);
+  };
+
+  const handleCloseNewWindow = () => {
+    setShowNewWindow(false);
+  };
+
+  const handleSetAa = () => {
+    setAa(prevAa => prevAa + 1);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleOpenNewWindow}>Open New Window</button>
+      <button onClick={handleSetAa}>setAa</button>
+      <SecondComponent dd={aa} />
+      {showNewWindow && (
+        <NewWindow onClose={handleCloseNewWindow}>
+          <SecondComponent dd={aa} />
+        </NewWindow>
+      )}
     </div>
   );
-}
+};
 
 export default App;
